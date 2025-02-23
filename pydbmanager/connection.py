@@ -29,13 +29,18 @@ class DatabaseConnection:
             return None
 
     def check_connection(self):
-        """Checks if the connection is still alive and reconnects if needed."""
-        try:
-            if self.conn:
-                self.conn.cursor().execute("SELECT 1")
-        except pyodbc.Error:
-            logging.warning("Connection lost. Reconnecting...")
+        """Ensures the database connection is active, reconnecting if necessary."""
+        if self.conn is None:
+            logging.warning("No active connection. Attempting to reconnect...")
             self.conn = self.create_connection()
+        
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT 1")
+        except (pyodbc.Error, AttributeError):  # Handle connection loss
+            logging.warning("Database connection lost. Reconnecting...")
+            self.conn = self.create_connection()
+
 
     def close_connection(self):
         """Closes the database connection."""

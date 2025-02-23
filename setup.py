@@ -8,7 +8,7 @@ setup(
     description="A Python package to manage SQL Server database connections and operations.",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/rohitkosamkar18/PyDBManager",  # Update with your repo URL
+    url="https://github.com/rohit180497/PyDBManager",  # Update with your repo URL
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
