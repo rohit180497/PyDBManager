@@ -29,7 +29,7 @@ class DatabaseConnection:
             return None
 
     def check_connection(self):
-        """Ensures the database connection is active, reconnecting if necessary."""
+        """Ensures the database connection is active, reconnecting if necessary"""
         if self.conn is None:
             logging.warning("No active connection. Attempting to reconnect...")
             self.conn = self.create_connection()
@@ -46,4 +46,4 @@ class DatabaseConnection:
         """Closes the database connection."""
         if self.conn:
             self.conn.close()
-            logging.info("Database connection closed.")
+            logging.info("Database connection closed")
