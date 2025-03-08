@@ -2,10 +2,10 @@ import unittest
 from pydbmanager.connection import DatabaseConnection
 
 class TestDatabaseConnection(unittest.TestCase):
-    """Unit test for database connection."""
+    """Unit test for database connection"""
 
     def setUp(self):
-        """Initialize database connection before each test."""
+        """Initialize database connection before each test"""
         self.db = DatabaseConnection()
 
     def test_create_connection(self):
