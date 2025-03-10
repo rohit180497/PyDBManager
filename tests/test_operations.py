@@ -54,6 +54,6 @@ if __name__ == "__main__":
 
 # test_update_data: Updates the name of the user with the email '
 
-# test_delete_data: Deletes the user record with the email '
+# test_delete_data: Deletes the user record with the email column'
 
 # The tearDown method is used to close the database connection after all tests have been executed. This ensures that the resources are properly released and the connection is closed.
