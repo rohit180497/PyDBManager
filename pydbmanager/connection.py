@@ -37,7 +37,7 @@ class DatabaseConnection:
         try:
             cursor = self.conn.cursor()
             cursor.execute("SELECT 1")
-        except (pyodbc.Error, AttributeError):  # Handle connection loss
+        except (pyodbc.Error, AttributeError):  # Handle in case of connection loss
             logging.warning("Database connection lost. Reconnecting...")
             self.conn = self.create_connection()
 
