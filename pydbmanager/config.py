@@ -18,4 +18,4 @@ class Config:
         """Ensures all required configurations are provided."""
         missing = [key for key in ["SERVER", "DATABASE", "USERNAME", "PASSWORD"] if not getattr(Config, key)]
         if missing:
-            raise ValueError(f"Missing required configuration values: {', '.join(missing)}")
+            raise ValueError(f"Missing required configuration values : {', '.join(missing)}")
