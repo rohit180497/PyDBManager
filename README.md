@@ -1,17 +1,15 @@
 # 📌 PyDBManager - SQL Server Database Manager  
 
-![Python](https://img.shields.io/badge/Python-3.6%2B-blue.svg)  
-![SQL Server](https://img.shields.io/badge/SQL%20Server-ODBC%20Driver%2017-red.svg)  
-![MIT License](https://img.shields.io/badge/License-MIT-green.svg)  
+![Python](https://img.shields.io/badge/Python-3.6%2B-blue.svg)  ![SQL Server](https://img.shields.io/badge/SQL%20Server-ODBC%20Driver%2017-red.svg)  ![MIT License](https://img.shields.io/badge/License-MIT-green.svg)  
 
 Welcome to **PyDBManager** – a Python package for managing **SQL Server connections and queries** easily and efficiently! 🎯  
 
 This guide will help you:
-✅ Install PyDBManager
-✅ Set up your `.env` file for credentials
-✅ Perform SQL operations using Python
-✅ Save query results
-✅ Use caching & batch fetching
+- ✅ Install PyDBManager
+- ✅ Set up your `.env` file for credentials
+- ✅ Perform SQL operations using Python
+- ✅ Save query results
+- ✅ Use caching & batch fetching
 
 ---
 
