@@ -54,8 +54,8 @@ class DatabaseOperations:
 
             columns = [desc[0] for desc in cursor.description]
             df = pd.DataFrame.from_records(rows, columns=columns)
-            print("Data fetched successfully!")
-            print("Dataframe Size", df.shape)
+            # print("Data fetched successfully!")
+            print("Data Shape", df.shape)
             logging.info(f"Data fetched in {time.time() - start_time:.4f} seconds")
             return df
         except Exception as e:
