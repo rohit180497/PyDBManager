@@ -33,6 +33,7 @@ class DatabaseOperations:
             A DataFrame containing the query results, or None if an error occurs.
         """
         self.db.check_connection()
+        self.conn = self.db.conn
         if self.conn is None:
             logging.error("No active database connection.")
             return None
@@ -101,6 +102,8 @@ class DatabaseOperations:
             True if the query executed and committed successfully, False otherwise.
         """
         self.db.check_connection()
+        self.conn = self.db.conn
+
         if self.conn is None:
             logging.error("No active database connection.")
             return False
@@ -136,6 +139,8 @@ class DatabaseOperations:
             True if the insertion was successful, False otherwise.
         """
         self.db.check_connection()
+        self.conn = self.db.conn
+
         if self.conn is None:
             logging.error("No active database connection.")
             return False
@@ -173,6 +178,8 @@ class DatabaseOperations:
             True if all rows were updated successfully, False if an error occurred.
         """
         self.db.check_connection()
+        self.conn = self.db.conn
+
         if self.conn is None:
             logging.error("No active database connection.")
             return False
