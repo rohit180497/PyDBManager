@@ -12,6 +12,7 @@ class Config:
     USERNAME = os.getenv("DB_USERNAME")
     PASSWORD = os.getenv("DB_PASSWORD")
     DRIVER = os.getenv("DB_DRIVER", "{ODBC Driver 17 for SQL Server}")
+    AUTH_MODE = os.getenv("DB_AUTH_MODE", "sql").strip()  # default to sql
 
     @staticmethod
     def validate():

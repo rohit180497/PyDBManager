@@ -13,15 +13,24 @@ class DatabaseConnection:
         self.conn = None
 
     def create_connection(self):
-        """Establishes a new database connection using pyodbc."""
-        connection_string = (
-            f"DRIVER={Config.DRIVER};"
-            f"SERVER={Config.SERVER};"
-            f"DATABASE={Config.DATABASE};"
-            f"UID={Config.USERNAME};"
-            f"PWD={Config.PASSWORD};"
-            "TrustServerCertificate=yes;"
-        )
+        if Config.AUTH_MODE.lower() == "windows":
+            connection_string = (
+                f"DRIVER={Config.DRIVER};"
+                f"SERVER={Config.SERVER};"
+                f"DATABASE={Config.DATABASE};"
+                "Trusted_Connection=yes;"
+                "TrustServerCertificate=yes;"
+            )
+        else:  # SQL Server Authentication
+            connection_string = (
+                f"DRIVER={Config.DRIVER};"
+                f"SERVER={Config.SERVER};"
+                f"DATABASE={Config.DATABASE};"
+                f"UID={Config.USERNAME};"
+                f"PWD={Config.PASSWORD};"
+                "TrustServerCertificate=yes;"
+            )
+
         try:
             self.conn = pyodbc.connect(connection_string)
             logging.info("Database connection established successfully.")
@@ -30,18 +39,29 @@ class DatabaseConnection:
             logging.error(f"Database connection failed: {e}")
             return None
 
+
     def get_connection_string(self):
-        """Returns the connection string encoded for use with SQLAlchemy."""
-        connection_string = (
-            f"DRIVER={Config.DRIVER};"
-            f"SERVER={Config.SERVER};"
-            f"DATABASE={Config.DATABASE};"
-            f"UID={Config.USERNAME};"
-            f"PWD={Config.PASSWORD};"
-            "TrustServerCertificate=yes;"
-        )
-        print("🔍 DEBUG CONNECTION STRING (RAW):", connection_string)
-        return urllib.parse.quote_plus(connection_string)
+
+        if Config.AUTH_MODE.lower() == "windows":
+            conn_str = (
+                f"DRIVER={Config.DRIVER};"
+                f"SERVER={Config.SERVER};"
+                f"DATABASE={Config.DATABASE};"
+                "Trusted_Connection=yes;"
+                "TrustServerCertificate=yes;"
+            )
+        else:
+            conn_str = (
+                f"DRIVER={Config.DRIVER};"
+                f"SERVER={Config.SERVER};"
+                f"DATABASE={Config.DATABASE};"
+                f"UID={Config.USERNAME};"
+                f"PWD={Config.PASSWORD};"
+                "TrustServerCertificate=yes;"
+            )
+
+        return urllib.parse.quote_plus(conn_str)
+
 
     def check_connection(self):
         """Ensures the database connection is active, reconnecting if necessary"""

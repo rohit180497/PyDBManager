@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pydbmanager",
-    version="0.1.4",
+    version="0.1.5",
     author="Rohit Kosamkar",
     author_email="rohitkosamkar97@gmail.com",
     description="A Python package for seamless SQL Server database management, supporting secure connections, query execution, batch fetching, caching, and result exporting.",
@@ -14,7 +14,8 @@ setup(
     install_requires=[
         "pyodbc>=4.0.32",
         "pandas>=1.3.0",
-        "python-dotenv>=0.21.0"
+        "python-dotenv>=0.21.0",
+        "sqlalchemy>=1.4.0",
     ],
     classifiers=[
         "Development Status :: 4 - Beta",

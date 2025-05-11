@@ -15,6 +15,23 @@ class DatabaseOperations:
         self.connection_string = self.db.get_connection_string()
 
     def query_data(self, query: str, batch_size: int = None):
+        """
+        Execute a SELECT query and return the results as a pandas DataFrame.
+
+        Parameters:
+        -----------
+        query : str
+            A valid SQL SELECT query to execute.
+
+        batch_size : int, optional
+            If specified, fetches rows in batches of this size to reduce memory usage.
+            If None, fetches all rows at once.
+
+        Returns:
+        --------
+        pd.DataFrame
+            A DataFrame containing the query results, or None if an error occurs.
+        """
         self.db.check_connection()
         if self.conn is None:
             logging.error("No active database connection.")
@@ -48,9 +65,41 @@ class DatabaseOperations:
                 cursor.close()
 
     def execute_query(self, query: str):
+        """
+        Execute a non-SELECT SQL query such as INSERT, UPDATE, or DELETE.
+
+        This function automatically retries the query on transient failures using
+        the `execute_with_retry` utility wrapper.
+
+        Parameters:
+        -----------
+        query : str
+            The SQL query string to execute. Should not be a SELECT query.
+
+        Returns:
+        --------
+        bool
+            True if the query executed successfully, False otherwise.
+        """
         return execute_with_retry(lambda: self._execute_query(query))
 
     def _execute_query(self, query: str) -> bool:
+        """
+        Internal method to execute a non-SELECT SQL query directly.
+
+        This function is called by `execute_query()` and is not intended to be used externally.
+        It runs the query, commits the transaction, and logs the outcome.
+
+        Parameters:
+        -----------
+        query : str
+            The SQL statement to execute (INSERT, UPDATE, DELETE, or CREATE TABLE).
+
+        Returns:
+        --------
+        bool
+            True if the query executed and committed successfully, False otherwise.
+        """
         self.db.check_connection()
         if self.conn is None:
             logging.error("No active database connection.")
@@ -70,7 +119,22 @@ class DatabaseOperations:
                 cursor.close()
 
     def insert_dataframe(self, df: pd.DataFrame, table_name: str):
-        """Insert DataFrame into SQL Server using SQLAlchemy."""
+        """
+        Insert a pandas DataFrame into a specified SQL Server table using SQLAlchemy.
+
+        Parameters:
+        -----------
+        df : pd.DataFrame
+            The DataFrame to be inserted into the SQL table. The column names must match the table schema.
+
+        table_name : str
+            The name of the target table in the SQL Server database.
+
+        Returns:
+        --------
+        bool
+            True if the insertion was successful, False otherwise.
+        """
         self.db.check_connection()
         if self.conn is None:
             logging.error("No active database connection.")
@@ -86,6 +150,28 @@ class DatabaseOperations:
             return False
 
     def update_table_with_dataframe(self, df: pd.DataFrame, table_name: str, key_columns: list):
+
+        """
+        Update rows in a SQL Server table using values from a DataFrame.
+
+        Parameters:
+        -----------
+        df : pd.DataFrame
+            The DataFrame containing updated values. Must include both the columns to update
+            and the key columns used to match existing records.
+
+        table_name : str
+            The name of the SQL Server table to update.
+
+        key_columns : list
+            A list of column names that uniquely identify each row in the table (e.g., ['id'] or ['email']).
+            These columns will be used in the WHERE clause of the UPDATE statement.
+
+        Returns:
+        --------
+        bool
+            True if all rows were updated successfully, False if an error occurred.
+        """
         self.db.check_connection()
         if self.conn is None:
             logging.error("No active database connection.")
@@ -111,6 +197,20 @@ class DatabaseOperations:
                 cursor.close()
 
     def create_table(self, create_sql: str):
+        """
+        Create a SQL Server table by executing a raw CREATE TABLE SQL statement.
+
+        Parameters:
+        -----------
+        create_sql : str
+            The SQL statement used to create the table. This can include IF NOT EXISTS logic
+            to prevent errors if the table already exists.
+
+        Returns:
+        --------
+        bool
+            True if the table creation statement executed successfully, False otherwise.
+        """
         return self.execute_query(create_sql)
 
     def close(self):
