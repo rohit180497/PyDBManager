@@ -1,6 +1,8 @@
 import pandas as pd
 import time
 import logging
+from sqlalchemy import create_engine
+import urllib
 from pydbmanager.connection import DatabaseConnection
 from pydbmanager.utils import execute_with_retry
 
@@ -10,9 +12,9 @@ class DatabaseOperations:
     def __init__(self):
         self.db = DatabaseConnection()
         self.conn = self.db.create_connection()
+        self.connection_string = self.db.get_connection_string()  
 
     def query_data(self, query: str, batch_size: int = None):
-        """Executes a SELECT query and returns results as a DataFrame."""
         self.db.check_connection()
         if self.conn is None:
             logging.error("No active database connection.")
@@ -45,7 +47,6 @@ class DatabaseOperations:
             cursor.close()
 
     def execute_query(self, query: str):
-        """Executes INSERT, UPDATE, DELETE queries."""
         return execute_with_retry(lambda: self._execute_query(query))
 
     def _execute_query(self, query: str) -> bool:
@@ -67,14 +68,15 @@ class DatabaseOperations:
             cursor.close()
 
     def insert_dataframe(self, df: pd.DataFrame, table_name: str):
-        """Inserts a DataFrame into the specified SQL table."""
+        """Insert DataFrame into SQL Server using SQLAlchemy."""
         self.db.check_connection()
         if self.conn is None:
             logging.error("No active database connection.")
             return False
 
         try:
-            df.to_sql(table_name, self.conn, if_exists='append', index=False)
+            engine = create_engine(f"mssql+pyodbc:///?odbc_connect={self.connection_string}")
+            df.to_sql(table_name, engine, if_exists='append', index=False)
             logging.info(f"Inserted DataFrame into table '{table_name}' successfully!")
             return True
         except Exception as e:
@@ -82,7 +84,6 @@ class DatabaseOperations:
             return False
 
     def update_table_with_dataframe(self, df: pd.DataFrame, table_name: str, key_columns: list):
-        """Updates records in a SQL table using a DataFrame based on key columns."""
         self.db.check_connection()
         if self.conn is None:
             logging.error("No active database connection.")
@@ -107,9 +108,7 @@ class DatabaseOperations:
             cursor.close()
 
     def create_table(self, create_sql: str):
-        """Creates a SQL table using the provided CREATE TABLE SQL statement."""
         return self.execute_query(create_sql)
 
     def close(self):
-        """Closes the database connection."""
         self.db.close_connection()
