@@ -40,6 +40,7 @@ class DatabaseConnection:
             f"PWD={Config.PASSWORD};"
             "TrustServerCertificate=yes;"
         )
+        print("🔍 DEBUG CONNECTION STRING (RAW):", connection_string)
         return urllib.parse.quote_plus(connection_string)
 
     def check_connection(self):

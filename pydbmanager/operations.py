@@ -12,7 +12,7 @@ class DatabaseOperations:
     def __init__(self):
         self.db = DatabaseConnection()
         self.conn = self.db.create_connection()
-        self.connection_string = self.db.get_connection_string()  
+        self.connection_string = self.db.get_connection_string()
 
     def query_data(self, query: str, batch_size: int = None):
         self.db.check_connection()
@@ -44,7 +44,8 @@ class DatabaseOperations:
             logging.error(f"Error executing query: {e}")
             return None
         finally:
-            cursor.close()
+            if 'cursor' in locals():
+                cursor.close()
 
     def execute_query(self, query: str):
         return execute_with_retry(lambda: self._execute_query(query))
@@ -65,7 +66,8 @@ class DatabaseOperations:
             logging.error(f"Error executing query: {e}")
             return False
         finally:
-            cursor.close()
+            if 'cursor' in locals():
+                cursor.close()
 
     def insert_dataframe(self, df: pd.DataFrame, table_name: str):
         """Insert DataFrame into SQL Server using SQLAlchemy."""
@@ -105,7 +107,8 @@ class DatabaseOperations:
             logging.error(f"Error updating table with DataFrame: {e}")
             return False
         finally:
-            cursor.close()
+            if 'cursor' in locals():
+                cursor.close()
 
     def create_table(self, create_sql: str):
         return self.execute_query(create_sql)
